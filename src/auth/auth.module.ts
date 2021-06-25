@@ -10,6 +10,8 @@ import { jwtConstants } from './constants';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { SessionSerializer } from './session.serializer';
+import { APP_GUARD } from '@nestjs/core/constants';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -24,6 +26,10 @@ import { SessionSerializer } from './session.serializer';
     UsersService,
     LocalStrategy,
     JwtStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
     SessionSerializer,
   ],
   controllers: [AuthController],

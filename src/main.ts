@@ -1,7 +1,7 @@
 import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
 import * as passport from 'passport';
-import * as flash from 'connect-flash';
+import flash = require('connect-flash');
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
