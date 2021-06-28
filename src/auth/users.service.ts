@@ -10,7 +10,8 @@ export class UsersService {
       {
         userId: 1,
         username: 'john',
-        password: 'changeme',
+        // password: 'changeme',
+        password: '$2b$10$Io7K92LEPAL4Bg4cl/FYguLyxVbvUjepLrZVtNOu3pkbaOdzLshya',
         roles: ['admin'],
       },
       {

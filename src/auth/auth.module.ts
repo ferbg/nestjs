@@ -12,6 +12,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { SessionSerializer } from './session.serializer';
 import { APP_GUARD } from '@nestjs/core/constants';
 import { RolesGuard } from './guards/roles.guard';
+import { CryptoService } from './services/crypto.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RolesGuard } from './guards/roles.guard';
       useClass: RolesGuard,
     },
     SessionSerializer,
+    CryptoService,
   ],
   controllers: [AuthController],
 })
