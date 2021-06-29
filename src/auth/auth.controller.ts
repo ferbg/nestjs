@@ -10,6 +10,8 @@ import {
   Session,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiParam, ApiProperty, ApiSecurity, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+
 import { AuthService } from './auth.service';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -18,6 +20,13 @@ import { LoginGuard } from './guards/login.guard';
 import { Role } from './roles/role.enum';
 import { Roles } from './roles/roles.decorator';
 
+class LoginDTO {
+  @ApiProperty()
+  username: string;
+  @ApiProperty()
+  password: string;
+}
+@ApiTags('auth')
 @Controller()
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -25,6 +34,13 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @UseGuards(LoginGuard)
   @Post('auth/login')
+  @ApiSecurity('basic')
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse()
+  @ApiBody({
+    description: 'username & credentials',
+    type: LoginDTO
+  })
   async login(@Request() req, @Session() session) {
     const response = await this.authService.login(req.user);
     session.user = response.payload;
@@ -33,6 +49,9 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({ description: 'Forbidden.'})
   getProfile(@Request() req) {
     return req.user;
   }
@@ -47,11 +66,15 @@ export class AuthController {
   @UseGuards(AuthenticatedGuard)
   @Get('roles')
   @Roles(Role.Admin)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({ description: 'Forbidden.'})
   getRoles(@Request() req) {
     return req.user.roles;
   }
 
   @Get('cifrado')
+  @ApiOkResponse()
   async cifrado() {
     const iv = randomBytes(16);
     const password = 'secretKey';
@@ -78,6 +101,7 @@ export class AuthController {
   }
 
   @Get('hash')
+  @ApiOkResponse()
   async hash() {
     const saltOrRounds = 10;
     const password = 'changeme';
