@@ -10,7 +10,7 @@ import {
   Session,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiParam, ApiProperty, ApiSecurity, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBearerAuth, ApiBody, ApiOkResponse, ApiParam, ApiProperty, ApiSecurity, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
@@ -19,6 +19,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginGuard } from './guards/login.guard';
 import { Role } from './roles/role.enum';
 import { Roles } from './roles/roles.decorator';
+import { BasicAuthGuard } from './guards/basic-auth.guard';
 
 class LoginDTO {
   @ApiProperty()
@@ -73,8 +74,12 @@ export class AuthController {
     return req.user.roles;
   }
 
+  @UseGuards(BasicAuthGuard)
   @Get('cifrado')
   @ApiOkResponse()
+  @ApiBasicAuth()
+  @ApiOkResponse()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized'})
   async cifrado() {
     const iv = randomBytes(16);
     const password = 'secretKey';
@@ -100,8 +105,11 @@ export class AuthController {
     };
   }
 
+  @UseGuards(BasicAuthGuard)
   @Get('hash')
+  @ApiBasicAuth()
   @ApiOkResponse()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized'})
   async hash() {
     const saltOrRounds = 10;
     const password = 'changeme';
