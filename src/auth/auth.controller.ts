@@ -20,13 +20,8 @@ import { LoginGuard } from './guards/login.guard';
 import { Role } from './roles/role.enum';
 import { Roles } from './roles/roles.decorator';
 import { BasicAuthGuard } from './guards/basic-auth.guard';
+import { LoginDTO } from 'src/dtos/login.dto';
 
-class LoginDTO {
-  @ApiProperty()
-  username: string;
-  @ApiProperty()
-  password: string;
-}
 @ApiTags('auth')
 @Controller()
 export class AuthController {

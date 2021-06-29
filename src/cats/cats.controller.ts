@@ -1,9 +1,11 @@
+import { diskStorage } from 'multer';
+
 import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+
 import { FileUploadDto } from 'src/dtos/file-upload.dto';
 import { CreateCatDto } from 'src/dtos/create-cat.dto';
-import { diskStorage } from 'multer';
 
 @ApiTags('cats')
 @Controller('cats')
